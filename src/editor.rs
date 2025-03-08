@@ -1,34 +1,33 @@
-use crossterm::terminal::{enable_raw_mode, disable_raw_mode, Clear, ClearType};
 use crossterm::event::{read,Event, Event::Key, KeyCode::Char, KeyEvent, KeyModifiers};
-use crossterm::execute;
-use std::io::stdout;
 use std::io::Error;
+
+mod term;
+use term::Terminal;
 
 pub struct Editor {
     should_quit: bool,
 }
 
 impl Editor {
-    pub fn new() -> Self {
-        Editor{ should_quit: false }
+    pub const fn new() -> Self {
+        Self { should_quit: false }
     }
 
     pub fn run(&mut self) {
-        Self::init().unwrap();
+        Terminal::init().unwrap();
         let result = self.repl();
-        Self::terminate().unwrap();
+        Terminal::terminate().unwrap();
         result.unwrap();
     }
 
     fn repl(&mut self) -> Result<(), Error> {
         loop {
-            let event = read()?;
-            self.evaluate_event(&event);
             self.refresh_screen()?;
-            
             if self.should_quit {
                 break;
             }
+            let event = read()?;
+            self.evaluate_event(&event);
         }
         Ok(())
     }
@@ -49,24 +48,25 @@ impl Editor {
     
     fn refresh_screen(&self) -> Result<(), Error> {
         if self.should_quit {
-            Self::clear_screen()?;
+            Terminal::clear_screen()?;
             print!("See ya!! \r\n");
+        } else {
+            Self::draw_rows()?;
+            Terminal::move_cursor_to(0, 0)?;
         }
         Ok(())
     }
 
-    fn init() -> Result<(), Error> {
-        enable_raw_mode()?;
-        Self::clear_screen()
+    fn draw_rows() -> Result<(), Error> {
+        let height = Terminal::size()?.1;
+        for current_row in 0..height {
+            print!("~");
+            if current_row + 1 < height {
+                print!("\r\n");
+            }
+        }
+        Ok(())
     }
 
-    fn terminate() -> Result<(), Error> {
-        disable_raw_mode()
-    }
-
-    fn clear_screen() -> Result<(), Error> {
-        let mut stdout = stdout();
-        execute!(stdout, Clear(ClearType::All))
-    }
 }
 
