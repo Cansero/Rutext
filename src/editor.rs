@@ -2,7 +2,7 @@ use crossterm::event::{read,Event, Event::Key, KeyCode::Char, KeyEvent, KeyModif
 use std::io::Error;
 
 mod term;
-use term::Terminal;
+use term::{Terminal, Coordinates};
 
 pub struct Editor {
     should_quit: bool,
@@ -53,7 +53,8 @@ impl Editor {
             Terminal::print("See ya!!")?;
         } else {
             Self::draw_rows()?;
-            Terminal::move_cursor_to(0, 0)?;
+            let coor = Coordinates::from(0, 0);
+            Terminal::move_cursor_to(&coor)?;
         }
         Terminal::show()?;
         Ok(())
