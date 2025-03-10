@@ -36,6 +36,11 @@ impl Terminal {
         Ok(())
     }
 
+    pub fn clear_line() -> Result<(), Error> {
+        queue!(stdout(), Clear(ClearType::CurrentLine))?;
+        Ok(())
+    }
+
     pub fn move_cursor_to(coor: &Coordinates) -> Result<(), Error> {
         queue!(stdout(), MoveTo(coor.x, coor.y))?;
         stdout().flush()?;

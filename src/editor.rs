@@ -63,6 +63,7 @@ impl Editor {
     fn draw_rows() -> Result<(), Error> {
         let size = Terminal::size();
         for current_row in 0..size.heigth {
+            Terminal::clear_line()?;
             Terminal::print("~")?;
             if current_row + 1 < size.heigth {
                 Terminal::print("\r\n")?;
