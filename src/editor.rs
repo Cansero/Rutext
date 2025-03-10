@@ -47,24 +47,24 @@ impl Editor {
     }
     
     fn refresh_screen(&self) -> Result<(), Error> {
-        Terminal::hide();
+        Terminal::hide()?;
         if self.should_quit {
             Terminal::clear_screen()?;
-            Terminal::print("See ya!!");
+            Terminal::print("See ya!!")?;
         } else {
             Self::draw_rows()?;
             Terminal::move_cursor_to(0, 0)?;
         }
-        Terminal::show();
+        Terminal::show()?;
         Ok(())
     }
 
     fn draw_rows() -> Result<(), Error> {
-        let height = Terminal::size()?.1;
-        for current_row in 0..height {
-            Terminal::print("~");
-            if current_row + 1 < height {
-                Terminal::print("\r\n");
+        let size = Terminal::size();
+        for current_row in 0..size.heigth {
+            Terminal::print("~")?;
+            if current_row + 1 < size.heigth {
+                Terminal::print("\r\n")?;
             }
         }
         Ok(())
