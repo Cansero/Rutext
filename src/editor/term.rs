@@ -1,4 +1,4 @@
-use crossterm::cursor::MoveTo;
+use crossterm::cursor::{MoveTo, Hide, Show};
 use crossterm::execute;
 use crossterm::terminal::{disable_raw_mode, enable_raw_mode, size, Clear, ClearType};
 use std::io::stdout;
@@ -32,6 +32,14 @@ impl Terminal {
 
     pub fn size() -> Result<(u16, u16), Error> {
         size()
+    }
+
+    pub fn hide() {
+        execute!(stdout(), Hide).unwrap();
+    }
+
+    pub fn show() {
+        execute!(stdout(), Show).unwrap();
     }
 
 }
