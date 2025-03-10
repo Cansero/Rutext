@@ -50,7 +50,7 @@ impl Editor {
         Terminal::hide();
         if self.should_quit {
             Terminal::clear_screen()?;
-            print!("See ya!! \r\n");
+            Terminal::print("See ya!!");
         } else {
             Self::draw_rows()?;
             Terminal::move_cursor_to(0, 0)?;
@@ -62,9 +62,9 @@ impl Editor {
     fn draw_rows() -> Result<(), Error> {
         let height = Terminal::size()?.1;
         for current_row in 0..height {
-            print!("~");
+            Terminal::print("~");
             if current_row + 1 < height {
-                print!("\r\n");
+                Terminal::print("\r\n");
             }
         }
         Ok(())

@@ -1,4 +1,5 @@
 use crossterm::cursor::{MoveTo, Hide, Show};
+use crossterm::style::Print;
 use crossterm::execute;
 use crossterm::terminal::{disable_raw_mode, enable_raw_mode, size, Clear, ClearType};
 use std::io::stdout;
@@ -40,6 +41,10 @@ impl Terminal {
 
     pub fn show() {
         execute!(stdout(), Show).unwrap();
+    }
+
+    pub fn print(text: &str) {
+        execute!(stdout(), Print(text)).unwrap();
     }
 
 }
